@@ -19,7 +19,10 @@ public class Timetable {
     private Long hospitalId;
     private Long doctorId;
 
+    @Column(name = "\"from_time\"") // Экранирование поля
     private LocalDateTime from;
+
+    @Column(name = "\"to_time\"") // Экранирование поля
     private LocalDateTime to;
 
     private String room;
