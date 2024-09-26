@@ -3,7 +3,6 @@ package com.github.simbir_timetable_service.repository;
 import com.github.simbir_timetable_service.timetable.Timetable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-
 import java.time.LocalDateTime;
 import java.util.List;
 

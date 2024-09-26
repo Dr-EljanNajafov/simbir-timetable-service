@@ -2,7 +2,6 @@ package com.github.simbir_timetable_service.timetable;
 
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.time.LocalDateTime;
 
 @Data

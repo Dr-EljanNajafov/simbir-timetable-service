@@ -3,7 +3,6 @@ package com.github.simbir_timetable_service.config.context;
 import lombok.Data;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.RequestScope;
-
 import java.util.List;
 
 @Data
