@@ -10,5 +10,9 @@ CREATE TABLE IF NOT EXISTS timetable
     CONSTRAINT check_time_intervals CHECK (EXTRACT(MINUTE FROM from_time) % 30 = 0 AND
                                            EXTRACT(MINUTE FROM to_time) % 30 =
                                            0),                                               -- Минуты должны быть кратны 30, секунды всегда 0
-    CONSTRAINT check_from_to CHECK (to_time > from_time)                                     -- Ограничение: to должно быть больше from
+    CONSTRAINT check_from_to CHECK (to_time > from_time),                                    -- Ограничение: to должно быть больше from
+
+    -- Внешние ключи с каскадным удалением
+    CONSTRAINT fk_hospital FOREIGN KEY (hospital_id) REFERENCES hospital (id) ON DELETE CASCADE,
+    CONSTRAINT fk_doctor FOREIGN KEY (doctor_id) REFERENCES doctor (id) ON DELETE CASCADE
 );
