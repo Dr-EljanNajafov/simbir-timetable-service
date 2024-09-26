@@ -1,5 +1,6 @@
 package com.github.simbir_timetable_service.client;
 
+import com.github.simbir_timetable_service.dto.AccountDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -15,5 +16,11 @@ public interface AccountServiceClient {
 
     @GetMapping("/api/Authentication/Validate")
     ResponseEntity<String> validateToken(@RequestParam("accessToken") String token);
-    
+
+    @GetMapping("/api/Authentication/Me")
+    ResponseEntity<AccountDto> getCurrentAccount(@RequestHeader("Authorization") String bearerToken);
+
+    @GetMapping("/api/Accounts/{id}")
+    ResponseEntity<AccountDto> getAccountById(@PathVariable("id") Long id, @RequestHeader("Authorization") String bearerToken);
+
 }
