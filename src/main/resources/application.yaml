@@ -1,0 +1,48 @@
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/postgres?useSSL=false&amp;serverTimezone=UTC
+    username: postgres
+    password: admin123
+
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.yaml
+    default-schema: public
+
+
+server:
+  port: 9060
+
+logging:
+  level:
+    org:
+      springframework:
+        web:
+          FilterChainProxy: DEBUG
+          csrf:
+            CsrfFilter: DEBUG
+        security: DEBUG
+    root: info
+
+log4j:
+  logger:
+    org:
+      springframework:
+        security: DEBUG
+
+services:
+  account-service:
+    host: localhost
+    port: 8090
+  hospital-service:
+    host: localhost
+    port: 9080
