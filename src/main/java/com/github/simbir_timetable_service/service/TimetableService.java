@@ -1,9 +1,12 @@
 package com.github.simbir_timetable_service.service;
 
+import com.github.simbir_timetable_service.client.AccountServiceClient;
+import com.github.simbir_timetable_service.config.context.UserContext;
 import com.github.simbir_timetable_service.dto.TimetableDto;
 import com.github.simbir_timetable_service.dto.mapper.TimetableDtoMapper;
 import com.github.simbir_timetable_service.repository.TimetableRepository;
 import com.github.simbir_timetable_service.timetable.Timetable;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -13,6 +16,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -21,14 +25,16 @@ public class TimetableService {
 
     private final TimetableDtoMapper timetableDtoMapper;
     private final TimetableRepository timetableRepository;
-
-    public TimetableDto createTimetable (TimetableDto timetableDto) {
+    private final AccountServiceClient accountServiceClient;
+    private final UserContext userContext;
+    public TimetableDto createTimetable (TimetableDto timetableDto, String bearerToken) {
         Timetable timetable = new Timetable();
         timetable.setHospitalId(timetableDto.hospitalId());
         timetable.setDoctorId(timetableDto.doctorId());
         timetable.setFrom(timetableDto.from());
         timetable.setTo(timetableDto.to());
         timetable.setRoom(timetableDto.room());
+        timetable.setPatientId(Objects.requireNonNull(accountServiceClient.getCurrentAccount(bearerToken).getBody()).id());
         Timetable savedTimetable = timetableRepository.save(timetable);
         return timetableDtoMapper.apply(savedTimetable);
     }
@@ -110,13 +116,26 @@ public class TimetableService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Время не входит в расписание.");
         }
 
-        // Логика для добавления записи (например, создание нового объекта расписания или изменение существующего)
+        // Проверка, забронировано ли уже это время
+        boolean isTimeBooked = timetableRepository.existsByDoctorIdAndRoomAndFromAndTo(
+                timetable.getDoctorId(),
+                timetable.getRoom(),
+                appointmentTime,
+                appointmentTime.plusMinutes(30)
+        );
+
+        if (isTimeBooked) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Это время уже забронировано.");
+        }
+
+        // Логика для добавления записи
         Timetable newAppointment = new Timetable();
         newAppointment.setHospitalId(timetable.getHospitalId());
         newAppointment.setDoctorId(timetable.getDoctorId());
         newAppointment.setFrom(appointmentTime);
         newAppointment.setTo(appointmentTime.plusMinutes(30)); // Предположим, что приём длится 30 минут
         newAppointment.setRoom(timetable.getRoom());
+        newAppointment.setPatientId(Objects.requireNonNull(accountServiceClient.getCurrentAccount(userContext.getToken()).getBody()).id());
 
         Timetable savedTimetable = timetableRepository.save(newAppointment);
         return timetableDtoMapper.apply(savedTimetable);

@@ -15,6 +15,7 @@ public class Timetable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private Long patientId;
     private Long hospitalId;
     private Long doctorId;
 

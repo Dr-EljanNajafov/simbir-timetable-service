@@ -9,7 +9,7 @@ import java.util.List;
 @Repository
 public interface TimetableRepository extends JpaRepository<Timetable, Long> {
 
-    List<Timetable> findByHospitalId(Long hospitalId);
+    boolean existsByDoctorIdAndRoomAndFromAndTo(Long doctorId, String room, LocalDateTime from, LocalDateTime to);
 
     List<Timetable> deleteTimetableByHospitalId(Long hospitalId);
     List<Timetable> deleteTimetableByDoctorId(Long doctorId);
@@ -19,6 +19,4 @@ public interface TimetableRepository extends JpaRepository<Timetable, Long> {
     List<Timetable> findByDoctorIdAndFromBetween(Long doctorId, LocalDateTime from, LocalDateTime to);
 
     List<Timetable> findByHospitalIdAndRoomAndFromBetween(Long hospitalId, String room, LocalDateTime from, LocalDateTime to);
-
-    List<Timetable> findByDoctorId(Long doctorId);
 }
