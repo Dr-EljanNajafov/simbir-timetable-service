@@ -1,6 +1,7 @@
 CREATE TABLE IF NOT EXISTS timetable
 (
     id          BIGSERIAL PRIMARY KEY,
+    patient_id  BIGINT,
     hospital_id BIGINT       NOT NULL,
     doctor_id   BIGINT       NOT NULL,
     from_time   TIMESTAMP    NOT NULL,
