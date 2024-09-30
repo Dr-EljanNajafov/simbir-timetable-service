@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Main-Class: com.github.simbir_timetable_service.SimbirTimetableServiceAp
+ plication
+
